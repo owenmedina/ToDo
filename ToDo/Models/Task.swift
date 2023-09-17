@@ -12,4 +12,5 @@ struct Task: Identifiable {
     var name: String
     var isCompleted: Bool = false
     var tags: [String] = []
+    var effort: Int?
 }
