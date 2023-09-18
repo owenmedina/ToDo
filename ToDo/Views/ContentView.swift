@@ -8,35 +8,27 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var tasks: [Task] = []
+    @StateObject var viewModel = TaskViewModel()
     @State private var newTask: String = ""
 
     var body: some View {
         NavigationView {
             VStack {
                 List {
-                    ForEach(tasks.indices, id: \.self) { index in
-                        let task = tasks[index]
-                        HStack {
-                            Image(systemName: task.isCompleted ? "checkmark.square.fill" : "square")
-                                .onTapGesture {
-                                    toggleTaskCompletion(index: index)
-                                }
-                                .foregroundColor(task.isCompleted ? .green : .primary)
-
-                            Text(task.name)
-                                .strikethrough(task.isCompleted)
-                                .foregroundColor(task.isCompleted ? .gray : .primary)
-                        }
-                    }
-                    .onDelete(perform: deleteTask)
+                    ForEach(viewModel.tasks) { task in
+                        TaskRow(isCompleted: $viewModel.tasks[viewModel.tasks.firstIndex(where: { $0.id == task.id })!].isCompleted,
+                                taskName: task.name)
+                    }.onDelete(perform: viewModel.deleteTask)
                 }
 
                 HStack {
                     TextField("Enter a new task", text: $newTask)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                    Button(action: addTask) {
+                    Button(action: {
+                        viewModel.addTask(Task(name: newTask))
+                        newTask = "" // Clear the input field
+                    }) {
                         Text("Add")
                     }
                 }
@@ -44,21 +36,6 @@ struct ContentView: View {
             }
             .navigationTitle("To-Do List")
         }
-    }
-
-    func addTask() {
-        if !newTask.isEmpty {
-            tasks.append(Task(name: newTask))
-            newTask = ""
-        }
-    }
-
-    func deleteTask(at offsets: IndexSet) {
-        tasks.remove(atOffsets: offsets)
-    }
-
-    func toggleTaskCompletion(index: Int) {
-        tasks[index].isCompleted.toggle()
     }
 }
 
