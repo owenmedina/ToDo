@@ -9,20 +9,23 @@ import SwiftUI
 
 struct TaskRow: View {
     @Binding var isCompleted: Bool
-    var taskName: String
+    var task: Task
 
     var body: some View {
-        HStack {
-            Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
-                .onTapGesture {
-                    toggleTaskCompletion()
-                }
-                .foregroundColor(isCompleted ? .green : .primary)
-
-            Text(taskName)
-                .strikethrough(isCompleted)
-                .foregroundColor(isCompleted ? .gray : .primary)
+        NavigationLink(destination: TaskDetailPage(task: task)) {
+            HStack {
+                Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
+                    .onTapGesture {
+                        toggleTaskCompletion()
+                    }
+                    .foregroundColor(isCompleted ? .green : .primary)
+                
+                Text(task.name)
+                    .strikethrough(isCompleted)
+                    .foregroundColor(isCompleted ? .gray : .primary)
+            }
         }
+
     }
     
     private func toggleTaskCompletion() {
@@ -38,6 +41,6 @@ struct TaskRow_Previews: PreviewProvider {
         TaskRow(isCompleted: Binding<Bool>(
             get: { isCompleted },
             set: { newValue in isCompleted = newValue }
-        ), taskName: "Sample Task")
+        ), task: Task(name: "Sample Task"))
     }
 }

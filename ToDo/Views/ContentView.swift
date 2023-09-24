@@ -17,7 +17,7 @@ struct ContentView: View {
                 List {
                     ForEach(viewModel.tasks) { task in
                         TaskRow(isCompleted: $viewModel.tasks[viewModel.tasks.firstIndex(where: { $0.id == task.id })!].isCompleted,
-                                taskName: task.name)
+                                task: task)
                     }.onDelete(perform: viewModel.deleteTask)
                 }
 
