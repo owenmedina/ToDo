@@ -13,6 +13,7 @@ struct TaskDetailPage: View {
     var body: some View {
         List {
             // For each TODO figure out how to iterate through the fields of an object
+            TaskFieldRow(fieldName: "date", fieldValue: task.date)
         }
         .listStyle(GroupedListStyle()) // Use a grouped list style for better spacing
         .navigationTitle(task.name)
